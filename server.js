@@ -1,11 +1,15 @@
 const express = require('express');
 const app = express();
 
-app.use(express.urlencoded({extended: true})); 
-
-app.listen(8080, () => {
-    console.log('listening on 8080');
+const MongoClient = require('mongodb').MongoClient;
+MongoClient.connect('mongodb+srv://gghh3017:test1234@cluster0.nvonzy2.mongodb.net/?retryWrites=true&w=majority', (req, res) => {
+    // connect complet -> app.listen
+    app.listen(8080, () => {
+        console.log('listening on 8080');
+    });    
 });
+
+app.use(express.urlencoded({extended: true})); 
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
