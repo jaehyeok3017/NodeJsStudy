@@ -23,6 +23,10 @@ MongoClient.connect('mongodb+srv://gghh3017:test1234@cluster0.nvonzy2.mongodb.ne
         
             db.collection('post').insertOne( { _id : total + 1 , title : req.body.title, date : req.body.date } , (error, result) => {
                 console.log('저장완료');
+
+                db.collection('counter').updateOne({name : '게시물갯수'}, { $inc : {totalPost : 1} }, (error, result) => {
+                    if(error) return console.log(error);
+                });
             });
         });
     });
