@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
+
 app.set('view engine', 'ejs');
+app.use(express.urlencoded({extended: true})); 
 
 let db;
 const MongoClient = require('mongodb').MongoClient;
@@ -13,15 +15,19 @@ MongoClient.connect('mongodb+srv://gghh3017:test1234@cluster0.nvonzy2.mongodb.ne
     });
     
     app.post('/add', (req, res) => {
-        res.send('전송완료')
+        res.send('전송완료');
+
+        db.collection('counter').findOne({name : '게시물갯수'}, (error, result) => {
+            console.log(result.totalPost);
+            let total = result.totalPost;
         
-        db.collection('post').insertOne( {title : req.body.title, date : req.body.date} , (error, result) => {
-            console.log('저장완료');
+            db.collection('post').insertOne( { _id : total + 1 , title : req.body.title, date : req.body.date } , (error, result) => {
+                console.log('저장완료');
+            });
         });
     });
 });
 
-app.use(express.urlencoded({extended: true})); 
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/index.html');
